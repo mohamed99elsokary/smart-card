@@ -22,15 +22,12 @@ def emergency_contacts(request, id=None):
         emergency_contact = get_object_or_404(
             models.EmergencyContact, id=request.data.get("id")
         )
-        if request.data.get("name") != None and request.data.get("name") != "":
+        if request.data.get("name") not in [None, ""]:
             emergency_contact.name = request.data.get("name")
-        if request.data.get("index") != None and request.data.get("index") != "":
+        if request.data.get("index") not in [None, ""]:
             emergency_contact.index = request.data.get("index")
 
-        if (
-            request.data.get("phone_number") != None
-            and request.data.get("phone_number") != ""
-        ):
+        if request.data.get("phone_number") not in [None, ""]:
             emergency_contact.phone_number = request.data.get("phone_number")
         emergency_contact.save()
         serializer = serializers.EmergencyContactSerializer(emergency_contact)

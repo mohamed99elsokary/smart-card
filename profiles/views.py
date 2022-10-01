@@ -56,46 +56,28 @@ def profile(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     elif request.method == "PUT":
-        if request.data.get("name") != None and request.data.get("name") != "":
+        if request.data.get("name") not in [None, ""]:
             profile.name = request.data.get("name")
-        if (
-            request.data.get("phone_number") != None
-            and request.data.get("phone_number") != ""
-        ):
+        if request.data.get("phone_number") not in [None, ""]:
             profile.phone_number = request.data.get("phone_number")
-        if (
-            request.data.get("profile_image") != None
-            and request.data.get("profile_image") != ""
-        ):
+        if request.data.get("profile_image") not in [None, ""]:
             profile.profile_image = request.data.get("profile_image")
-        if request.data.get("address") != None and request.data.get("address") != "":
+        if request.data.get("address") not in [None, ""]:
             profile.address = request.data.get("address")
-        if (
-            request.data.get("blood_type") != None
-            and request.data.get("blood_type") != ""
-        ):
+        if request.data.get("blood_type") not in [None, ""]:
             profile.blood_type = request.data.get("blood_type")
-        if (
-            request.data.get("is_addictive") != None
-            and request.data.get("is_addictive") != ""
-        ):
+        if request.data.get("is_addictive") not in [None, ""]:
             profile.is_addictive = request.data.get("is_addictive")
-        if (
-            request.data.get("national_id") != None
-            and request.data.get("national_id") != ""
-        ):
+        if request.data.get("national_id") not in [None, ""]:
             profile.national_id = request.data.get("national_id")
 
-        if request.data.get("facebook") != None and request.data.get("facebook") != "":
+        if request.data.get("facebook") not in [None, ""]:
             profile.facebook = request.data.get("facebook")
 
-        if (
-            request.data.get("instagram") != None
-            and request.data.get("instagram") != ""
-        ):
+        if request.data.get("instagram") not in [None, ""]:
             profile.instagram = request.data.get("instagram")
 
-        if request.data.get("whatsapp") != None and request.data.get("whatsapp") != "":
+        if request.data.get("whatsapp") not in [None, ""]:
             profile.whatsapp = request.data.get("whatsapp")
 
         profile.save()
@@ -108,8 +90,7 @@ def change_password(request):
     username = request.data.get("username")
     old_password = request.data.get("old_password")
     new_password = request.data.get("new_password")
-    user = authenticate(username=username, password=old_password)
-    if user:
+    if user := authenticate(username=username, password=old_password):
         user.set_password(new_password)
         user.save()
 
@@ -124,17 +105,18 @@ def forget(request):
     user = get_object_or_404(User, email=email)
     profile = get_object_or_404(models.Profile, user=user)
     code = "".join(
-        (
-            secrets.choice(string.ascii_letters + string.digits + string.punctuation)
-            for i in range(8)
+        secrets.choice(
+            string.ascii_letters + string.digits + string.punctuation
         )
+        for _ in range(8)
     )
+
     profile.forget_pass_code = code
     profile.save()
     message = code
     send_mail.send(email, message)
 
-    return Response({"code": code}, status=status.HTTP_200_OK)
+    return Response({"code": message}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

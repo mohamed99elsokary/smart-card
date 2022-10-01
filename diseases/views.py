@@ -20,17 +20,11 @@ def disease(request, id=None):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     elif request.method == "PUT":
         disease = get_object_or_404(models.Disease, id=request.data.get("id"))
-        if request.data.get("disease") != None and request.data.get("disease") != "":
+        if request.data.get("disease") not in [None, ""]:
             disease.disease = request.data.get("disease")
-        if (
-            request.data.get("discover_date") != None
-            and request.data.get("discover_date") != ""
-        ):
+        if request.data.get("discover_date") not in [None, ""]:
             disease.discover_date = request.data.get("discover_date")
-        if (
-            request.data.get("is_healed") != None
-            and request.data.get("is_healed") != ""
-        ):
+        if request.data.get("is_healed") not in [None, ""]:
             disease.is_healed = request.data.get("is_healed")
 
         disease.save()

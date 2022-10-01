@@ -22,17 +22,11 @@ def treatment(request, id=None):
 
     elif request.method == "PUT":
         treatment = get_object_or_404(models.Treatment, id=request.data.get("id"))
-        if (
-            request.data.get("treatment") != None
-            and request.data.get("treatment") != ""
-        ):
+        if request.data.get("treatment") not in [None, ""]:
             treatment.treatment = request.data.get("treatment")
-        if request.data.get("dose") != None and request.data.get("dose") != "":
+        if request.data.get("dose") not in [None, ""]:
             treatment.dose = request.data.get("dose")
-        if (
-            request.data.get("is_healed") != None
-            and request.data.get("is_healed") != ""
-        ):
+        if request.data.get("is_healed") not in [None, ""]:
             treatment.is_healed = request.data.get("is_healed")
         treatment.save()
         serializer = serializers.TreatmentSerializer(treatment)
